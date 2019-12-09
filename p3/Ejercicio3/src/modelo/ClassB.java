@@ -12,8 +12,7 @@ public class ClassB implements Runnable {
 	public void run() {
 		Thread hebra = Thread.currentThread();
 		boolean sigue = true;
-		synchronized(a)
-        {
+	
 			
 			try {
 				a.EnterAndWait(hebra);
@@ -22,7 +21,7 @@ public class ClassB implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        }
+        
 		
 		}	
 		

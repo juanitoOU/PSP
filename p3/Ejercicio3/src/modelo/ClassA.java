@@ -10,7 +10,7 @@ public class ClassA {
 	}
 	
 	
-	public void EnterAndWait (Thread hebra){
+	public synchronized void  EnterAndWait (Thread hebra){
 		
 		System.out.println("Iniciando " + hebra.getName());
 		System.out.println("Ejecutando " + hebra.getName());
