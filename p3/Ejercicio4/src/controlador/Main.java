@@ -8,83 +8,58 @@ public class Main {
 	public static void main(String[] args) {
 
 		ClassA a = new ClassA();
-		
-		a.counter=20;
-		
-		
-		for(int i=0; i < 20; i++) {
-			Thread b = new Thread(new ClassB(a));
-			b.setName("hilo" +i);
 
-			b.start();
-			synchronized (b) {
-				try {
-					System.out.println("Waiting for b to complete...");
-					b.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			try {
-				b.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		
+		ClassB b1 = new ClassB(a);
+		ClassB b2 = new ClassB(a);
+		ClassB b3 = new ClassB(a);
+
+		b1.setNext(b2);
+		b2.setNext(b3);
+		b3.setNext(b1);
+	
+
+		Thread t1 = new Thread(b1);
+		Thread t2 = new Thread(b2);
+		Thread t3 = new Thread(b3);
+
+		t1.start();
+		t2.start();
+		t3.start();
+
+		
+		try {
+		Thread.sleep(500);
+		} catch(InterruptedException e){
+			e.printStackTrace();
 		}
 		
 		
+
+		synchronized (b1) {
+			b1.notify();
+		}
 		
-		
-		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+			
+			
+
+		try {
+			t1.join();
+			t2.join();
+			t3.join();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		
 
-//		Thread b1 = new Thread(new ClassB(a));
-//		b1.setName("hilo1");
-//
-//		b1.start();
-//		synchronized (b1) {
-//			try {
-//				System.out.println("Waiting for b1 to complete...");
-//				b1.wait();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		Thread b2 = new Thread(new ClassB(a));
-//		b2.setName("hilo2");
-//		b2.start();
-//		synchronized (b2) {
-//			try {
-//				System.out.println("Waiting for b2 to complete...");
-//				b2.wait();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		Thread b3 = new Thread(new ClassB(a));
-//		b3.setName("hilo3");
-//		b3.start();
-//		synchronized (b3) {
-//			try {
-//				System.out.println("Waiting for b3 to complete...");
-//				b3.wait();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
 
-//		try {
-//			b1.join();
-//			b2.join();
-//			b3.join();
-//		} catch (InterruptedException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-
+		
+		System.out.println(a.getThreadIds().toString());
 	}
 
 }

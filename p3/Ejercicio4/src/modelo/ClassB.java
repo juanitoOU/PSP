@@ -2,22 +2,43 @@ package modelo;
 
 public class ClassB implements Runnable {
 	private ClassA a;
-	Thread hebra = Thread.currentThread();
+	public ClassB next;
+	boolean sigue=true;
+	
 
 	public ClassB(ClassA a) {
 		this.a = a;
 	}
 
-	@Override
-	public void run() {
-		a.EnterAndWait(hebra);
-		
-		synchronized (hebra) {
-			hebra.notifyAll();
-		}
+	public ClassB getNext() {
+		return next;
 	}
 
+	public void setNext(ClassB next) {
+		this.next = next;
+	}
 
+	@Override
+	public void run() {
+		while(!a.isFinished()) {
+			synchronized (this) {
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+				
+				a.EnterAndWait();
+		
+		synchronized (next) {
+			next.notify();
+		}
+		
+		}
+		
+	}
 
 }
 
